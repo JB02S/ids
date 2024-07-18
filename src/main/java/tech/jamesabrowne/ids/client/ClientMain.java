@@ -6,6 +6,10 @@ import tech.jamesabrowne.ids.client.ClientService;
 class ClientMain {
     public static void main(String[] args) {
 
+        System.setProperty("jna.library.path", "C:\\Windows\\System32\\Npcap");
+        System.setProperty("org.pcap4j.core.pcapLibName", "C:\\Windows\\System32\\Npcap\\wpcap.dll");
+        System.setProperty("org.pcap4j.core.packetLibName", "C:\\Windows\\System32\\Npcap\\Packet.dll");
+
         Options options = new Options();
 
         Option readOption = new Option("r", "read", true, "Path to the pcap file");
