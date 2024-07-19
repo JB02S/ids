@@ -6,6 +6,8 @@ import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.Pcaps;
 import org.pcap4j.packet.Packet;
 
+import java.util.List;
+
 public class PacketSniffer {
     public void readPcap(String pcapPath) {
         try {
@@ -28,6 +30,23 @@ public class PacketSniffer {
     public void listenOnInterface(String networkInterfaceName) {
         try {
             PcapNetworkInterface device = Pcaps.getDevByName(networkInterfaceName);
+            if (device == null) {
+                System.out.println("No device found.");
+            }
+        } catch (PcapNativeException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void listNetworkInterfaces() {
+
+        try {
+            List<PcapNetworkInterface> allDevs = Pcaps.findAllDevs();
+            System.out.println("name : device description");
+            for (PcapNetworkInterface dev : allDevs) {
+                System.out.println(dev.getName() + " : " + dev.getDescription());
+            }
         } catch (PcapNativeException e) {
             e.printStackTrace();
         }

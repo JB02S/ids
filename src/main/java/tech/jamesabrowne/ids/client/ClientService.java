@@ -12,4 +12,8 @@ public class ClientService {
     public void listen(String networkInterfaceName) {
         packetSniffer.listenOnInterface(networkInterfaceName);
     }
+
+    public void listNetworkInterfaces() {
+        packetSniffer.listNetworkInterfaces();
+    }
 }

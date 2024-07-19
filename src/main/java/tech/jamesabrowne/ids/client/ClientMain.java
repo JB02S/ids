@@ -26,6 +26,13 @@ class ClientMain {
         listenOption.setRequired(false);
         options.addOption(listenOption);
 
+        /*
+        * Option "-l" to list network interfaces
+        * */
+        Option listInterfacesOption = new Option("l", "list", false, "List all available network interfaces");
+        listInterfacesOption.setRequired(false);
+        options.addOption(listInterfacesOption);
+
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
@@ -39,6 +46,8 @@ class ClientMain {
             } else if (cmd.hasOption("i")){
                 String networkInterfaceName = cmd.getOptionValue("i");
                 clientService.listen(networkInterfaceName);
+            } else if (cmd.hasOption("l")) {
+                clientService.listNetworkInterfaces();
             } else {
                 formatter.printHelp("PcapReader", options);
             }
