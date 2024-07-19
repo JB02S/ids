@@ -1,6 +1,8 @@
 package tech.jamesabrowne.ids.sniffer;
 
 import org.pcap4j.core.PcapHandle;
+import org.pcap4j.core.PcapNativeException;
+import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.Pcaps;
 import org.pcap4j.packet.Packet;
 
@@ -21,6 +23,15 @@ public class PacketSniffer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void listenOnInterface(String networkInterfaceName) {
+        try {
+            PcapNetworkInterface device = Pcaps.getDevByName(networkInterfaceName);
+        } catch (PcapNativeException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void printPacketDetails(Packet packet) {

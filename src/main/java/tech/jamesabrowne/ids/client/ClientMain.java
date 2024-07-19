@@ -12,9 +12,19 @@ class ClientMain {
 
         Options options = new Options();
 
+        /*
+        * Option "-r" to read a pcap file offline
+        * */
         Option readOption = new Option("r", "read", true, "Path to the pcap file");
         readOption.setRequired(false);
         options.addOption(readOption);
+
+        /*
+        * Option "-i" for live pcap capture on a specified interface
+        * */
+        Option listenOption = new Option("i", "listen", true, "Network interface to listen on");
+        listenOption.setRequired(false);
+        options.addOption(listenOption);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -26,6 +36,9 @@ class ClientMain {
             if (cmd.hasOption("r")) {
                 String filePath = cmd.getOptionValue("r");
                 clientService.readPcapOffline(filePath);
+            } else if (cmd.hasOption("i")){
+                String networkInterfaceName = cmd.getOptionValue("i");
+                clientService.listen(networkInterfaceName);
             } else {
                 formatter.printHelp("PcapReader", options);
             }

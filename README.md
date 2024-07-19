@@ -1,3 +1,5 @@
+https://github.com/JB02S/ids/actions/workflows/WORKFLOW-FILE/badge.svg
+
 ## Build basic IDS in Java to improve understanding of packet capture and analysis and also improve Java skills
 
 ### The problem
