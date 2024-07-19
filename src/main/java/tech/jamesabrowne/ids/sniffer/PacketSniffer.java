@@ -1,9 +1,6 @@
 package tech.jamesabrowne.ids.sniffer;
 
-import org.pcap4j.core.PcapHandle;
-import org.pcap4j.core.PcapNativeException;
-import org.pcap4j.core.PcapNetworkInterface;
-import org.pcap4j.core.Pcaps;
+import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
 
 import java.util.List;
@@ -31,9 +28,21 @@ public class PacketSniffer {
         try {
             PcapNetworkInterface device = Pcaps.getDevByName(networkInterfaceName);
             if (device == null) {
-                System.out.println("No device found.");
+                System.err.println("No device found with name: " + networkInterfaceName);
+                return;
             }
-        } catch (PcapNativeException e) {
+
+            int snapLen = 65536;
+            int timeout = 10;
+            PcapHandle handle = device.openLive(snapLen, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
+
+            handle.loop(-1, (PacketListener) packet -> {
+                System.out.println(handle.getTimestamp());
+                System.out.println(packet);
+            });
+
+            handle.close();
+        } catch (PcapNativeException | InterruptedException | NotOpenException e) {
             e.printStackTrace();
         }
 
