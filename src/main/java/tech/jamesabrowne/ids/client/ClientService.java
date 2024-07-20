@@ -9,11 +9,15 @@ public class ClientService {
         packetSniffer.readPcap(filepath);
     }
 
-    public void listen(String networkInterfaceName) {
-        packetSniffer.listenOnInterface(networkInterfaceName);
+    public void outputLive(String networkInterfaceName) {
+        packetSniffer.listenOnInterface(networkInterfaceName, false);
     }
 
     public void listNetworkInterfaces() {
         packetSniffer.listNetworkInterfaces();
+    }
+
+    public void monitorSignatureBased(String networkInterfaceName) {
+        packetSniffer.listenOnInterface(networkInterfaceName, true);
     }
 }

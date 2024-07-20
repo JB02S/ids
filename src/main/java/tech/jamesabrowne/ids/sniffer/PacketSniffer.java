@@ -24,7 +24,7 @@ public class PacketSniffer {
         }
     }
 
-    public void listenOnInterface(String networkInterfaceName) {
+    public void listenOnInterface(String networkInterfaceName, Boolean monitorSignature) {
         try {
             PcapNetworkInterface device = Pcaps.getDevByName(networkInterfaceName);
             if (device == null) {
@@ -37,6 +37,9 @@ public class PacketSniffer {
             PcapHandle handle = device.openLive(snapLen, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
 
             handle.loop(-1, (PacketListener) packet -> {
+                if (monitorSignature) {
+                    System.out.println("using signature based analysis to monitor for malicious traffic");
+                }
                 System.out.println(handle.getTimestamp());
                 System.out.println(packet);
             });

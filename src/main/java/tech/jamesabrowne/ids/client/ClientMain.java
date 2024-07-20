@@ -27,6 +27,13 @@ class ClientMain {
         options.addOption(listenOption);
 
         /*
+        * Option "-s" for monitoring packets on a interface using signature-based analysis
+        * */
+        Option monitorSignature = new Option("s", "signature-based analysis", false, "List all available network interfaces");
+        monitorSignature.setRequired(false);
+        options.addOption(monitorSignature);
+
+        /*
         * Option "-l" to list network interfaces
         * */
         Option listInterfacesOption = new Option("l", "list", false, "List all available network interfaces");
@@ -45,7 +52,12 @@ class ClientMain {
                 clientService.readPcapOffline(filePath);
             } else if (cmd.hasOption("i")){
                 String networkInterfaceName = cmd.getOptionValue("i");
-                clientService.listen(networkInterfaceName);
+                if (cmd.hasOption("-s")) {
+                    clientService.monitorSignatureBased(networkInterfaceName);
+                } else {
+                    clientService.outputLive(networkInterfaceName);
+                }
+
             } else if (cmd.hasOption("l")) {
                 clientService.listNetworkInterfaces();
             } else {
