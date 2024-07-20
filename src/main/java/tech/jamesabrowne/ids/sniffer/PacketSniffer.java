@@ -44,14 +44,16 @@ public class PacketSniffer {
             List<Signature> signatures = signatureLoader.loadSignatures();
             SignatureMatcher signatureMatcher = new SignatureMatcher(signatures);
 
+            System.out.println("using signature based analysis to monitor for malicious traffic");
 
             handle.loop(-1, (PacketListener) packet -> {
                 if (monitorSignature) {
-                    System.out.println("using signature based analysis to monitor for malicious traffic");
                     signatureMatcher.match(packet);
+                } else {
+                    System.out.println(handle.getTimestamp());
+                    System.out.println(packet);
                 }
-                System.out.println(handle.getTimestamp());
-                System.out.println(packet);
+
             });
 
             handle.close();

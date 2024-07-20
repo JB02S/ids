@@ -25,28 +25,23 @@ public class SignatureMatcher {
     private boolean matches(Packet packet, Signature sig) {
 
         IpV4Packet ipPacket = packet.get(IpV4Packet.class);
-        System.out.println("**************************\n************************\n**************************\n************************\n");
+
         if (ipPacket == null) {
             return false;
         }
-        System.out.println("**************************\n************************\n**************************\n************************\n");
+
         String packetSrcIp = ipPacket.getHeader().getSrcAddr().getHostAddress();
         String packetDstIp = ipPacket.getHeader().getDstAddr().getHostAddress();
         String packetProtocol = ipPacket.getHeader().getProtocol().name();
         String packetData = new String(ipPacket.getPayload().getRawData());
-//
-//        if (packetProtocol.equalsIgnoreCase(sig.getProtocol()) &&
-//                packetDstIp.equals(sig.getDstIp()) &&
-//                packetSrcIp.equals(sig.getSrcIp())) {
-//            return true;
-//        }
 
-        System.out.println("**************************\n************************\n**************************\n************************\n");
-        System.out.println(packetData);
-        System.out.println(packetProtocol);
-        System.out.println(packetDstIp);
-        System.out.println(packetSrcIp);
-        System.out.println("**************************\n************************\n**************************\n************************\n");
+        if (packetProtocol.equalsIgnoreCase(sig.getProtocol()) &&
+                packetDstIp.equals(sig.getDstIp()) &&
+                packetSrcIp.equals(sig.getSrcIp()) &&
+                packetData.contains(sig.getPattern())) {
+            return true;
+        }
+
         return false;
     }
 }
