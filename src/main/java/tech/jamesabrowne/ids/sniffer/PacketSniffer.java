@@ -2,6 +2,9 @@ package tech.jamesabrowne.ids.sniffer;
 
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
+import tech.jamesabrowne.ids.signature.Signature;
+import tech.jamesabrowne.ids.signature.SignatureLoader;
+import tech.jamesabrowne.ids.signature.SignatureMatcher;
 
 import java.util.List;
 
@@ -34,18 +37,25 @@ public class PacketSniffer {
 
             int snapLen = 65536;
             int timeout = 10;
+
             PcapHandle handle = device.openLive(snapLen, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
+            SignatureLoader signatureLoader = new SignatureLoader();
+
+            List<Signature> signatures = signatureLoader.loadSignatures();
+            SignatureMatcher signatureMatcher = new SignatureMatcher(signatures);
+
 
             handle.loop(-1, (PacketListener) packet -> {
                 if (monitorSignature) {
                     System.out.println("using signature based analysis to monitor for malicious traffic");
+                    signatureMatcher.match(packet);
                 }
                 System.out.println(handle.getTimestamp());
                 System.out.println(packet);
             });
 
             handle.close();
-        } catch (PcapNativeException | InterruptedException | NotOpenException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
