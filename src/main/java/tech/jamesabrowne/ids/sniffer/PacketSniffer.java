@@ -2,6 +2,7 @@ package tech.jamesabrowne.ids.sniffer;
 
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
+import tech.jamesabrowne.ids.analysis.PacketStatistics;
 import tech.jamesabrowne.ids.signature.Signature;
 import tech.jamesabrowne.ids.signature.SignatureLoader;
 import tech.jamesabrowne.ids.signature.SignatureMatcher;
@@ -11,14 +12,16 @@ import java.util.List;
 public class PacketSniffer {
     public void readPcap(String pcapPath) {
         try {
-            // Open capture handle on pcap file
             PcapHandle handle = Pcaps.openOffline(pcapPath);
             Packet packet;
 
-            // Read all packets in pcap
+            PacketStatistics packetStatistics = new PacketStatistics();
+
             while ((packet = handle.getNextPacket()) != null) {
-                printPacketDetails(packet);
+                packetStatistics.analyzePacket(packet);
             }
+
+            System.out.println(packetStatistics.layerCounts);
 
             handle.close();
 

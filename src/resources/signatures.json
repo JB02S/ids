@@ -12,5 +12,12 @@
       "protocol": "TCP",
       "srcIp": "ANY",
       "dstIp": "ANY"
+    },
+    {
+      "id": 3,
+      "pattern": "GET / HTTP/1.1",
+      "protocol": "TCP",
+      "srcIp": "192.168.0.109",
+      "dstIp": "146.190.62.39"
     }
 ]
