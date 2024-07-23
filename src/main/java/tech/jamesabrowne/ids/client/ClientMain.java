@@ -1,7 +1,10 @@
 package tech.jamesabrowne.ids.client;
 
 import org.apache.commons.cli.*;
+import org.pcap4j.core.PcapNetworkInterface;
 import tech.jamesabrowne.ids.client.ClientService;
+
+import java.util.List;
 
 class ClientMain {
     public static void main(String[] args) {
@@ -12,22 +15,16 @@ class ClientMain {
 
         Options options = new Options();
 
-        /*
-        * Option "-r" to read a pcap file offline
-        * */
-        Option readOption = new Option("r", "read", true, "Path to the pcap file");
-        readOption.setRequired(false);
-        options.addOption(readOption);
 
         /*
-        * Option "-i" for live pcap capture on a specified interface
+        * Option "-i" specify interface for traffic monitoring
         * */
         Option listenOption = new Option("i", "listen", true, "Network interface to listen on");
         listenOption.setRequired(false);
         options.addOption(listenOption);
 
         /*
-        * Option "-s" for monitoring packets on a interface using signature-based analysis
+        * Option "-s" for monitoring packets on an interface using signature-based analysis
         * */
         Option monitorSignature = new Option("s", "signature-based analysis", false, "List all available network interfaces");
         monitorSignature.setRequired(false);
@@ -46,11 +43,7 @@ class ClientMain {
         try {
             CommandLine cmd = parser.parse(options, args);
             ClientService clientService = new ClientService();
-
-            if (cmd.hasOption("r")) {
-                String filePath = cmd.getOptionValue("r");
-                clientService.readPcapOffline(filePath);
-            } else if (cmd.hasOption("i")){
+            if (cmd.hasOption("i")){
                 String networkInterfaceName = cmd.getOptionValue("i");
                 if (cmd.hasOption("-s")) {
                     clientService.monitorSignatureBased(networkInterfaceName);
@@ -59,7 +52,11 @@ class ClientMain {
                 }
 
             } else if (cmd.hasOption("l")) {
-                clientService.listNetworkInterfaces();
+                List<PcapNetworkInterface> allDevs = clientService.getNetworkInterfaces();
+                for (PcapNetworkInterface dev : allDevs) {
+                    System.out.println(dev);
+                }
+
             } else {
                 formatter.printHelp("PcapReader", options);
             }

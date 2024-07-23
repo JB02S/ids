@@ -2,7 +2,6 @@ package tech.jamesabrowne.ids.sniffer;
 
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;
-import tech.jamesabrowne.ids.analysis.PacketStatistics;
 import tech.jamesabrowne.ids.signature.Signature;
 import tech.jamesabrowne.ids.signature.SignatureLoader;
 import tech.jamesabrowne.ids.signature.SignatureMatcher;
@@ -10,25 +9,6 @@ import tech.jamesabrowne.ids.signature.SignatureMatcher;
 import java.util.List;
 
 public class PacketSniffer {
-    public void readPcap(String pcapPath) {
-        try {
-            PcapHandle handle = Pcaps.openOffline(pcapPath);
-            Packet packet;
-
-            PacketStatistics packetStatistics = new PacketStatistics();
-
-            while ((packet = handle.getNextPacket()) != null) {
-                packetStatistics.analyzePacket(packet);
-            }
-
-            System.out.println(packetStatistics.layerCounts);
-
-            handle.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void listenOnInterface(String networkInterfaceName, Boolean monitorSignature) {
         try {
@@ -66,18 +46,16 @@ public class PacketSniffer {
 
     }
 
-    public void listNetworkInterfaces() {
-
+    public List<PcapNetworkInterface> listNetworkInterfaces() {
+        
+        List<PcapNetworkInterface> allDevs = null;
         try {
-            List<PcapNetworkInterface> allDevs = Pcaps.findAllDevs();
-            System.out.println("name : device description");
-            for (PcapNetworkInterface dev : allDevs) {
-                System.out.println(dev.getName() + " : " + dev.getDescription());
-            }
+            allDevs = Pcaps.findAllDevs();
         } catch (PcapNativeException e) {
             e.printStackTrace();
         }
 
+        return allDevs;
     }
 
     private static void printPacketDetails(Packet packet) {
