@@ -23,5 +23,10 @@ class ClientServiceTest {
         clientService = new ClientService();
         mockPacketSniffer = mock(PacketSniffer.class);
     }
-    
+
+    @Test
+    void basicTest() {
+        Assertions.assertEquals(1,1);
+    }
+
 }
