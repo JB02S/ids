@@ -7,11 +7,20 @@ import tech.jamesabrowne.ids.client.ClientService;
 import java.util.List;
 
 class ClientMain {
+
+    private final ClientService clientService;
+
+    ClientMain(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
     public static void main(String[] args) {
 
-        System.setProperty("jna.library.path", "C:\\Windows\\System32\\Npcap");
-        System.setProperty("org.pcap4j.core.pcapLibName", "C:\\Windows\\System32\\Npcap\\wpcap.dll");
-        System.setProperty("org.pcap4j.core.packetLibName", "C:\\Windows\\System32\\Npcap\\Packet.dll");
+        if (System.getProperty("os.name").contains("Windows")) {
+            System.setProperty("jna.library.path", "C:\\Windows\\System32\\Npcap");
+            System.setProperty("org.pcap4j.core.pcapLibName", "C:\\Windows\\System32\\Npcap\\wpcap.dll");
+            System.setProperty("org.pcap4j.core.packetLibName", "C:\\Windows\\System32\\Npcap\\Packet.dll");
+        }
 
         Options options = new Options();
 
@@ -22,21 +31,23 @@ class ClientMain {
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
+        ClientService clientService = new ClientService();
+        ClientMain clientMain = new ClientMain(clientService);
+
         try {
 
             CommandLine cmd = parser.parse(options, args);
-            ClientService clientService = new ClientService();
 
             if (cmd.hasOption("i")){
                 String networkInterfaceName = cmd.getOptionValue("i");
                 if (cmd.hasOption("-s")) {
-                    clientService.monitorSignatureBased(networkInterfaceName);
+                    clientMain.clientService.monitorSignatureBased(networkInterfaceName);
                 } else {
-                    clientService.outputLive(networkInterfaceName);
+                    clientMain.clientService.monitor(networkInterfaceName);
                 }
 
             } else if (cmd.hasOption("l")) {
-                List<PcapNetworkInterface> allDevs = clientService.getNetworkInterfaces();
+                List<PcapNetworkInterface> allDevs = clientMain.clientService.getNetworkInterfaces();
                 for (PcapNetworkInterface dev : allDevs) {
                     System.out.println(dev);
                 }

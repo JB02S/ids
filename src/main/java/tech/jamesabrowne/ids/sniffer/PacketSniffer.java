@@ -32,11 +32,7 @@ public class PacketSniffer {
             handle.loop(-1, (PacketListener) packet -> {
                 if (monitorSignature) {
                     signatureMatcher.match(packet);
-                } else {
-                    System.out.println(handle.getTimestamp());
-                    System.out.println(packet);
                 }
-
             });
 
             handle.close();
