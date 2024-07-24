@@ -20,4 +20,7 @@ Want a cli tool which can be used for monitoring network traffic and recording l
 
 ### This tool will be deployed on other machines by cloning the repo and running a setup script
 
+### Current plan
+
+![Flowcharts.jpeg](..%2F..%2FDownloads%2FFlowcharts.jpeg)
 

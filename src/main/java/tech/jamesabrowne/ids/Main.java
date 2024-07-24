@@ -1,18 +1,11 @@
-package tech.jamesabrowne.ids.client;
+package tech.jamesabrowne.ids;
 
 import org.apache.commons.cli.*;
 import org.pcap4j.core.PcapNetworkInterface;
-import tech.jamesabrowne.ids.client.ClientService;
 
 import java.util.List;
 
-class ClientMain {
-
-    private final ClientService clientService;
-
-    ClientMain(ClientService clientService) {
-        this.clientService = clientService;
-    }
+class Main {
 
     public static void main(String[] args) {
 
@@ -31,8 +24,8 @@ class ClientMain {
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
 
-        ClientService clientService = new ClientService();
-        ClientMain clientMain = new ClientMain(clientService);
+        PacketSniffer packetSniffer = new PacketSniffer();
+
 
         try {
 
@@ -41,13 +34,13 @@ class ClientMain {
             if (cmd.hasOption("i")){
                 String networkInterfaceName = cmd.getOptionValue("i");
                 if (cmd.hasOption("-s")) {
-                    clientMain.clientService.monitorSignatureBased(networkInterfaceName);
+                    packetSniffer.monitor(networkInterfaceName, true);
                 } else {
-                    clientMain.clientService.monitor(networkInterfaceName);
+                    packetSniffer.monitor(networkInterfaceName, false);
                 }
 
             } else if (cmd.hasOption("l")) {
-                List<PcapNetworkInterface> allDevs = clientMain.clientService.getNetworkInterfaces();
+                List<PcapNetworkInterface> allDevs = packetSniffer.listNetworkInterfaces();
                 for (PcapNetworkInterface dev : allDevs) {
                     System.out.println(dev);
                 }

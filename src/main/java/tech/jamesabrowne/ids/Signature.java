@@ -1,4 +1,4 @@
-package tech.jamesabrowne.ids.signature;
+package tech.jamesabrowne.ids;
 
 public class Signature {
 

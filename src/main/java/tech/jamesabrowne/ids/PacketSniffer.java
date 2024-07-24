@@ -1,16 +1,12 @@
-package tech.jamesabrowne.ids.sniffer;
+package tech.jamesabrowne.ids;
 
 import org.pcap4j.core.*;
-import org.pcap4j.packet.Packet;
-import tech.jamesabrowne.ids.signature.Signature;
-import tech.jamesabrowne.ids.signature.SignatureLoader;
-import tech.jamesabrowne.ids.signature.SignatureMatcher;
 
 import java.util.List;
 
 public class PacketSniffer {
 
-    public void listenOnInterface(String networkInterfaceName, Boolean monitorSignature) {
+    public void monitor(String networkInterfaceName, Boolean monitorSignature) {
         try {
             PcapNetworkInterface device = Pcaps.getDevByName(networkInterfaceName);
             if (device == null) {
@@ -22,9 +18,8 @@ public class PacketSniffer {
             int timeout = 10;
 
             PcapHandle handle = device.openLive(snapLen, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, timeout);
-            SignatureLoader signatureLoader = new SignatureLoader();
 
-            List<Signature> signatures = signatureLoader.loadSignatures();
+            List<Signature> signatures = SignatureLoader.loadSignatures();
             SignatureMatcher signatureMatcher = new SignatureMatcher(signatures);
 
             System.out.println("using signature based analysis to monitor for malicious traffic");
@@ -43,7 +38,7 @@ public class PacketSniffer {
     }
 
     public List<PcapNetworkInterface> listNetworkInterfaces() {
-        
+
         List<PcapNetworkInterface> allDevs = null;
         try {
             allDevs = Pcaps.findAllDevs();
@@ -53,8 +48,5 @@ public class PacketSniffer {
 
         return allDevs;
     }
-
-    private static void printPacketDetails(Packet packet) {
-        System.out.println("Packet: " + packet);
-    }
 }
+

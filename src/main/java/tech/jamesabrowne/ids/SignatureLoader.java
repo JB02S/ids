@@ -1,4 +1,4 @@
-package tech.jamesabrowne.ids.signature;
+package tech.jamesabrowne.ids;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class SignatureLoader {
-    public List<Signature> loadSignatures() throws Exception{
+    public static List<Signature> loadSignatures() throws Exception{
 
         List<Signature> signatures = null;
 

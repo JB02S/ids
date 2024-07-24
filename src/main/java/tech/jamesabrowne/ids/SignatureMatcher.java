@@ -1,4 +1,4 @@
-package tech.jamesabrowne.ids.signature;
+package tech.jamesabrowne.ids;
 
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
